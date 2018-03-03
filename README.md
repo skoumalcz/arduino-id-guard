@@ -1,4 +1,4 @@
-#IdGuard - Arduino hardare ID
+# IdGuard - Arduino hardare ID
 
 Tiny library to avoid deploying your sketch to wrong device.
 Writes device ID in EEPROM memory and verifies if it matches id
