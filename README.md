@@ -1,8 +1,8 @@
-# IdGuard - Arduino hardare ID
+# IdGuard - Arduino hardware ID
 
 Tiny library to avoid deploying your sketch to wrong device.
-Writes device ID in EEPROM memory and verifies if it matches id
-hardcoded in you sketch.
+Writes device ID in EEPROM memory and verifies if it matches ID
+hardcoded in your sketch.
 
 ## Write ID in EEPROM
 
@@ -17,8 +17,8 @@ void setup() {
 
   // Next line does:
   // Writes DEVICE_ID to last byte in EEPROM memory.
-  // LED devined by ledPin blinks I and D in morse code "..|-.."
-  // Restarts device.
+  // LED defined by ledPin blinks I and D letters in Morse code "..|-..".
+  // Restarts device and prevents executing any following code.
   IdGuard idGuard(DEVICE_ID, ledPin, true);
 
   // The same as above but with offset 3 to write ID in 4th byte in EEPROM.
@@ -29,7 +29,7 @@ void setup() {
 
 void loop()
 {
-  // main loop will be never called
+  // main loop will be never called thanks to IdGuard
 }
 ```
 
