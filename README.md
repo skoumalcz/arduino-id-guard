@@ -45,5 +45,6 @@ void loop()
 ```
 
 ## Credits
-[Jakub Dolejsek](https://github.com/x0nix)
+
+[Jakub Dolejsek](https://github.com/x0nix)  
 [David Vadura](https://www.linkedin.com/in/david-va%C4%8Fura-b1a8b3124/)
