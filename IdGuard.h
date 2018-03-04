@@ -27,53 +27,58 @@
 
 #include <EEPROM.h>
 
-class IdGuard
+class IdGuardClass
 {
-  public:
-    IdGuard(uint8_t myId, uint8_t ledPin = -1, bool overrideCurrent = false, uint8_t offset = 0);
-    uint8_t getId();
+public:
+    uint8_t error_led_pin = -1;
+    uint16_t offset = 0;
 
-  private:
-    uint8_t _offset = 0;
-    void _resetDevice(uint8_t ledPin);
-    void _ledBlink(uint8_t ledPin, bool dot);
+    uint8_t readId();
+    void forceId(uint8_t myId);
+    void writeIdAndRestartDevice(uint8_t myId);
+private:
+    void _resetDevice();
+    void _ledBlink(bool dot);
 
 };
 
-IdGuard::IdGuard(uint8_t myId, uint8_t ledPin, bool overrideCurrent, uint8_t offset) {
-
-  _offset = offset;
-
-  uint8_t currentId = getId();
+void IdGuardClass::forceId(uint8_t myId) {
+  uint8_t currentId = readId();
 
   if(currentId != myId) {
-
-    if(overrideCurrent) {
-      EEPROM.write(EEPROM.length() - 1 - offset, myId);
-    }
-
+    _resetDevice();
   }
 
-  // restart arduino in error situation
-  if(currentId != myId || overrideCurrent) {
-    _resetDevice(ledPin);
-  }
 }
 
-void IdGuard::_resetDevice(uint8_t ledPin = -1) {
+void IdGuardClass::writeIdAndRestartDevice(uint8_t myId) {
+  uint8_t currentId = readId();
 
-  if(ledPin >= 0) {
-    pinMode(ledPin, OUTPUT);
+  if(currentId != myId) {
+    EEPROM.write(EEPROM.length() - 1 - offset, myId);
+  }
+
+  _resetDevice();
+}
+
+uint8_t IdGuardClass::readId() {
+  return EEPROM.read(EEPROM.length() - 1 - offset);
+}
+
+void IdGuardClass::_resetDevice() {
+
+  if(error_led_pin >= 0) {
+    pinMode(error_led_pin, OUTPUT);
 
     // I
-    _ledBlink(ledPin, true);
-    _ledBlink(ledPin, true);
+    _ledBlink(true);
+    _ledBlink(true);
     delay(1000);
 
     // D
-    _ledBlink(ledPin, false);
-    _ledBlink(ledPin, true);
-    _ledBlink(ledPin, true);
+    _ledBlink(false);
+    _ledBlink(true);
+    _ledBlink(true);
     delay(2000);
   }
 
@@ -81,13 +86,11 @@ void IdGuard::_resetDevice(uint8_t ledPin = -1) {
   resetFunc();
 }
 
-uint8_t IdGuard::getId() {
-  return EEPROM.read(EEPROM.length() - 1 - _offset);
-}
-
-void IdGuard::_ledBlink(uint8_t ledPin, bool dot) {
-  digitalWrite(ledPin, HIGH);
+void IdGuardClass::_ledBlink(bool dot) {
+  digitalWrite(error_led_pin, HIGH);
   delay(dot ? 300 : 1000);
-  digitalWrite(ledPin, LOW);
+  digitalWrite(error_led_pin, LOW);
   delay(300);
 }
+
+static IdGuardClass IdGuard;

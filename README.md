@@ -1,45 +1,10 @@
 # IdGuard - Arduino hardware ID
 
-Tiny library to avoid deploying your sketch to wrong device.
-Writes device ID in EEPROM memory and verifies if it matches ID
-hardcoded in your sketch.
+Tiny library to avoid deploying your sketch to wrong device or to identify
+device by its ID. Writes device ID in [EEPROM](https://en.wikipedia.org/wiki/EEPROM)
+memory and verifies if it matches ID hardcoded in your sketch.
 
-## Write ID in EEPROM
-
-```cpp
-#include "IdGuard.h"
-
-#define DEVICE_ID 2
-
-int ledPin = 13;
-
-void setup() {
-
-  // Next line does:
-  // Writes DEVICE_ID to last byte in EEPROM memory.
-  // LED defined by ledPin blinks I and D letters in Morse code "..|-..".
-  // Restarts device and prevents executing any following code.
-  IdGuard idGuard(DEVICE_ID, ledPin, true);
-
-  // The same as above but with offset 3 to write ID in 4th byte in EEPROM.
-  //IdGuard idGuard(DEVICE_ID, ledPin, true, 3);
-
-  // nothing after IdGuard will be executed
-}
-
-void loop()
-{
-  // main loop will be never called thanks to IdGuard
-}
-```
-
-# Check device ID on every startup
-
-To check device if device ID in EEPROM matches the on we expect in our sketch,
-we only need to switch 3rd parameter in IdGuard constructor from true to false.
-
-When id matches, sketch continues normally. In case of id mismatch device is
-restarted immediately and led blinks I and D in morse code "..|-..".
+## Usage
 
 ```cpp
 #include "IdGuard.h"
@@ -50,19 +15,31 @@ int ledPin = 13;
 
 void setup() {
 
-  // Next line does:
+  // Optional offset to write ID in 4th byte in EEPROM.
+  // Defaults to 0, which means ID is stored in last byte in EEPROM.
+  IdGuard.offset = 3;
+
+  // Recommended, but optional led for error signalization.
+  IdGuard.error_led_pin = ledPin;
+
+  // Writes DEVICE_ID to EEPROM memory.
+  // LED defined by error_led_pin blinks I and D letters in Morse code "..|-..".
+  // Restarts device to prevent execution of any following code.
+  // Comment out this line after ID is successfully stored in EEPROM.
+  IdGuard.writeIdAndRestartDevice(DEVICE_ID);
+
   // Checks DEVICE_ID against last byte in EEPROM memory.
-  // Blinks I and D in morse code "..|-.."and restarts device in case of mismatch.
-  IdGuard idGuard(DEVICE_ID, ledPin, false);
+  // Blinks I and D in morse code "..|-.."and restarts device in case of
+  // mismatch to prevent execution of any following code.
+  IdGuard.forceId(DEVICE_ID);
 
-  // The same as above but with offset 3 to write ID in 4th byte in EEPROM.
-  //IdGuard idGuard(DEVICE_ID, ledPin, false, 3);
+  // Only reads ID from EEPROM.
+  uint8_t device_id = IdGuard.readId(DEVICE_ID);
 
-  // nothing after IdGuard will be executed in case of id mismatch
 }
 
 void loop()
 {
-  // main loop will be never called in case of id mismatch
+  // main loop will be never called in case of ID mismatch thanks to IdGuard
 }
 ```
