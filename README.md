@@ -43,3 +43,7 @@ void loop()
   // main loop will be never called in case of ID mismatch thanks to IdGuard
 }
 ```
+
+## Credits
+[Jakub Dolejsek](https://github.com/x0nix)
+[David Vadura](https://www.linkedin.com/in/david-va%C4%8Fura-b1a8b3124/)
