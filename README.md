@@ -15,7 +15,7 @@ int ledPin = 13;
 
 void setup() {
 
-  // Optional offset to write ID in 4th byte in EEPROM.
+  // Optional offset to write ID in 4th byte from the end in EEPROM.
   // Defaults to 0, which means ID is stored in last byte in EEPROM.
   IdGuard.offset = 3;
 
