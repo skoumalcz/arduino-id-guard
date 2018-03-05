@@ -1,0 +1,14 @@
+{
+  "name": "IdGuard",
+  "keywords": "arduino, hardware id, sketch",
+  "description": "Tiny library to avoid deploying your sketch to wrong device.",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/skoumalcz/arduino-id-guard.git"
+  },
+  "version": "1.0.0",
+  "frameworks": "arduino",
+  "platforms": "*",
+  "license": "Apache-2.0"
+}
