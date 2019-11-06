@@ -34,7 +34,7 @@ void setup() {
   IdGuard.forceId(DEVICE_ID);
 
   // Only reads ID from EEPROM.
-  uint8_t device_id = IdGuard.readId(DEVICE_ID);
+  uint8_t device_id = IdGuard.readId();
 
 }
 
